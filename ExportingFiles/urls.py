@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^weather/history/$', weather_history, name='weather_history'),
     url(r'^weather/details/(?P<weather_id>\w+)', details, name='details'),
     url(r'^towns/$', all_towns, name='towns'),
-
+    url(r'^clientes/$', all_clientes, name='clientes'),
+    url(r'^triaje/history/$', triaje_history, name='triaje_history'),
 ]

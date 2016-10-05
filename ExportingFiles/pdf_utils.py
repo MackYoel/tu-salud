@@ -18,14 +18,18 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table,\
     TableStyle
 
-from .settings import STATIC_ROOT
+from .settings import STATIC_ROOT, BASE_DIR
+import os
+
 from .utils import get_temperatures, get_wind_speed, get_str_days,\
     get_random_colors, precip_prob_sum, get_percentage
 legendcolors = get_random_colors(10)
 
-pdfmetrics.registerFont(TTFont('FreeSans', STATIC_ROOT + 'fonts/FreeSans.ttf'))
-pdfmetrics.registerFont(
-    TTFont('FreeSansBold', STATIC_ROOT + 'fonts/FreeSansBold.ttf'))
+
+font_path = os.path.join(BASE_DIR, 'static', 'fonts', 'FreeSans.ttf')
+pdfmetrics.registerFont(TTFont('FreeSans', font_path))
+# pdfmetrics.registerFont(
+#     TTFont('FreeSansBold', STATIC_ROOT + 'fonts/FreeSansBold.ttf'))
 
 
 class PdfPrint:

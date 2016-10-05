@@ -11,6 +11,7 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
 	    <link rel="stylesheet" type="text/css" href="{% static 'css/master.css' %}">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css">	    
 	</head>
 	<body>
 		<div class="container">
@@ -22,5 +23,58 @@
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<!-- <script type="text/javascript">
+    $(function () {
+        $('#datetimepicker6').datetimepicker();
+        $('#datetimepicker7').datetimepicker({
+            useCurrent: false //Important! See issue #1075
+        });
+        $("#datetimepicker6").on("dp.change", function (e) {
+            $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+        });
+        $("#datetimepicker7").on("dp.change", function (e) {
+            $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+        });
+    });
+</script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript">
+        var test = {};
+
+        function isValidDate(date){
+            return !isNaN(date.getTime());
+        }
+
+        function allowConsult() {
+            if (test.a && test.b)
+                $('#excelBtn').prop('disabled', false);
+            else                
+                $('#excelBtn').prop('disabled', true);
+        }
+
+        function checkDate(date, testCase) {
+            if (isValidDate(date)) {
+                test[testCase] = true;
+            } else {
+                test[testCase] = false;
+            }
+        }
+
+        $('#datepicker-a').datepicker();
+        $('#datepicker-b').datepicker();
+        $('#datepicker-a').datepicker().on('changeDate', function(e) {
+            var _date = e.date;
+            checkDate(_date, 'a');
+            allowConsult();
+            $('#from_date').val(_date.toISOString().split('T')[0]);
+        });
+        $('#datepicker-b').datepicker().on('changeDate', function(e) {
+            var _date = e.date;
+            checkDate(_date, 'b');
+            allowConsult();
+            $('#to_date').val(_date.toISOString().split('T')[0]);
+        });
+        allowConsult();
+    </script>
 	</body>
 </html>

@@ -987,7 +987,6 @@ class Citaswebdet(models.Model):
 
 
 class Clientes(models.Model):
-    oid = models.IntegerField()
     chistoria = models.CharField(primary_key=True, max_length=11)
     capellidos = models.CharField(max_length=100, blank=True, null=True)
     cnombre = models.CharField(max_length=100, blank=True, null=True)
@@ -3973,7 +3972,7 @@ class Tratantes(models.Model):
 
 
 class Triaje(models.Model):
-    chistoria = models.ForeignKey(Clientes, db_column='chistoria', null=True)
+    chistoria = models.ForeignKey(Clientes, db_column='chistoria', blank=True, null=True)
     tfecha = models.DateTimeField(blank=True, null=True)
     nsecuencia = models.IntegerField(blank=True, null=True)
     npulso = models.DecimalField(max_digits=3, decimal_places=0, blank=True, null=True)

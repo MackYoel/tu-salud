@@ -3,6 +3,7 @@
 *.pyc
 db.sqlite3
 crm/local_settings.py
+migrations/
 
 Django###
 

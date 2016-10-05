@@ -1,0 +1,120 @@
+
+{% extends "base.html" %}
+{% load staticfiles i18n %}
+
+{% block title %}
+	{% trans "Towns" %}
+{% endblock title %}
+
+{% block content %}
+<h3 align="center">{% trans "Clientes" %}</h3>
+<!-- datepicker-->
+
+<div class="container">
+    <div class='col-md-5'>
+        <div class="form-group">
+            <!-- <div class='input-group date' id="datetimepicker6">
+                <input type='text' class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div> -->
+            <div class="input-group date" data-provide="datepicker" id="datepicker-a">
+                <input type="text" class="form-control">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='col-md-5'>
+        <div class="form-group">
+            <div class="input-group date" data-provide="datepicker" id="datepicker-b">
+                <input type="text" class="form-control">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>
+            </div>
+            <!-- <div class='input-group date' id='datetimepicker7'>
+                <input type='text' class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div> -->
+        </div>
+    </div>
+</div>
+
+
+
+<!-- /datepicker-->
+<div class="row">
+	<form method="POST">
+		{% csrf_token %}
+		<div class="col-md-3">{{ form.town }}</div>
+		<div class="col-md-3">
+			<button type="submit" class="btn btn-default">{% trans "Submit" %}</button>
+		</div>
+		<div class="col-md-6">
+            <input type="hidden" name="from_date" id="from_date">
+            <input type="hidden" name="to_date" id="to_date">
+			<button type="submit" class="btn btn-default pull-right m-left-5" name="pdf">{% trans "PDF Report" %}</button>
+			
+            <select class="selectpicker">
+              <option>Cuestionario Audio</option>
+              <option>Cuestionario Berlin</option>
+            </select>
+
+            <button type="submit" class="btn btn-default pull-right" id="excelBtn" name="excel">{% trans "Excel Report" %}</button>
+		</div>
+	</form>
+</div>
+		
+<div class="table-responsive">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>{% trans "Historia" %}</th>
+				<th>{% trans "Apellidos" %}</th>
+				<th>{% trans "Nombre" %}</th>
+				<th>{% trans "Dni" %}</th>
+				<th>{% trans "CVI" %}</th>
+				<th>{% trans "Sexo" %}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for t in clientes %}
+			<tr>
+				
+				<td>{{ t.chistoria }}</td>
+				<td>{{ t.capellidos }}</td>
+					<td>{{ t.cnombre }}</td>
+				<td>{{ t.cdni }}</td>
+				<td>{{ t.cestciv }}</td>
+					<td>{{ t.csexo }}</td>
+				
+			</tr>
+			{% empty %}
+			<tr>
+				<td colspan="2" class="text-center">{% trans "No towns added." %}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+<script type="text/javascript">
+    // $('#datetimepicker6').datetimepicker();
+    // $(function () {
+    //     $('#datetimepicker6').datetimepicker();
+    //     $('#datetimepicker7').datetimepicker({
+    //         useCurrent: false //Important! See issue #1075
+    //     });
+    //     $("#datetimepicker6").on("dp.change", function (e) {
+    //         $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+    //     });
+    //     $("#datetimepicker7").on("dp.change", function (e) {
+    //         $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+    //     });
+    // });
+</script>
+{% endblock content %}
