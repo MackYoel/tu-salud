@@ -59,10 +59,11 @@
             <input type="hidden" name="from_date" id="from_date">
             <input type="hidden" name="to_date" id="to_date">
 			<button type="submit" class="btn btn-default pull-right m-left-5" name="pdf">{% trans "PDF Report" %}</button>
+
 			
-            <select class="selectpicker">
-              <option>Cuestionario Audio</option>
-              <option>Cuestionario Berlin</option>
+            <select name="report" class="selectpicker">
+              <option value="report_1">reporte 1</option>
+              <option value="report_2">reporte 2</option>
             </select>
 
             <button type="submit" class="btn btn-default pull-right" id="excelBtn" name="excel">{% trans "Excel Report" %}</button>

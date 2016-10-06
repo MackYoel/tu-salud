@@ -11,9 +11,11 @@ from .pdf_utils import PdfPrint
 import datetime
 from django.db.models import Q
 import pandas as pd
+from . import define_reports
 
 
 def all_clientes(request):
+
     clientes = Clientes.objects.all()[:20]
 
     template_name = "exportingfiles/all_clientes.html"
@@ -51,16 +53,16 @@ def all_clientes(request):
         workbook  = writer.book
         worksheet = writer.sheets['Sheet1']
 
-        worksheet.write('A1', 'dnis') 
-        worksheet.write('B1', 'chistoria')  
+        report = getattr(define_reports, request.POST.get('report'))
+
+        for row, header_name in report['headers']:
+            worksheet.write(row, header_name)
 
         i = 2
         for cliente in clientes:
-            worksheet.write('A'+str(i), cliente.chistoria )
-            worksheet.write('B'+str(i), cliente.cdni )
-            worksheet.write('C'+str(i), cliente.capellidos )
-            worksheet.write('D'+str(i), cliente.csexo )
-            i = i+1
+            for letter, attr in report['attributes']:
+                worksheet.write('{}{}'.format(letter, i), getattr(cliente, attr))
+            i += 1
 
         # Close the Pandas Excel writer and output the Excel file.
         writer.save()
