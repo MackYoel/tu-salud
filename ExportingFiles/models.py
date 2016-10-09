@@ -987,7 +987,7 @@ class Citaswebdet(models.Model):
 
 
 class Clientes(models.Model):
-    oid = models.IntegerField()
+    id = models.AutoField(primary_key=True)
     chistoria = models.CharField(primary_key=True, max_length=11)
     capellidos = models.CharField(max_length=100, blank=True, null=True)
     cnombre = models.CharField(max_length=100, blank=True, null=True)
@@ -1004,7 +1004,7 @@ class Clientes(models.Model):
     cempresa = models.CharField(max_length=11, blank=True, null=True)
     cusuario = models.CharField(max_length=5, blank=True, null=True)
     tfecha = models.DateTimeField(blank=True, null=True)
-    id = models.AutoField(primary_key=True)
+    # id = models.AutoField(primary_key=True)
     ctipdoc = models.CharField(max_length=1, blank=True, null=True)
     cdni = models.CharField(max_length=8, blank=True, null=True)
     csucursal = models.CharField(max_length=2, blank=True, null=True)
@@ -1036,6 +1036,7 @@ class Clientes(models.Model):
 
 
 class ClientesDet(models.Model):
+    # cliente = 
     chistoria = models.CharField(max_length=11)
     cpuesto = models.CharField(max_length=255, blank=True, null=True)
     cempresa = models.CharField(max_length=11, blank=True, null=True)
@@ -1072,7 +1073,8 @@ class ClientesIud(models.Model):
 
 
 class Clinico(models.Model):
-    chistoria = models.ForeignKey(Clientes, db_column='chistoria', blank=True, null=True)
+    # chistoria = models.ForeignKey(Clientes, db_column='chistoria', blank=True, null=True)
+    chistoria = models.CharField(primary_key=True, max_length=11)
     tfecha = models.DateTimeField(blank=True, null=True)
     thora = models.TimeField(blank=True, null=True)
     nsecuencia = models.IntegerField(blank=True, null=True)

@@ -12,6 +12,8 @@ import datetime
 from django.db.models import Q
 import pandas as pd
 from . import define_reports
+from helpers import CSV_SERIE, get_attribute
+from . import models
 
 
 def all_clientes(request):
@@ -24,14 +26,32 @@ def all_clientes(request):
     }
 
     if 'excel' in request.POST:
-
         from_date = datetime.datetime.strptime(request.POST.get('from_date'), "%Y-%m-%d")
         to_date = datetime.datetime.strptime(request.POST.get('to_date'), "%Y-%m-%d") + datetime.timedelta(hours=23, minutes=59)
 
-        clientes = Clientes.objects.filter(
-            Q(tfecha__gte=from_date),
-            Q(tfecha__lte=to_date)
-        )
+        report = getattr(define_reports, request.POST.get('report'))
+        Model = getattr(models, report['model'])
+        main_filters = {}
+        if report['model'] == 'Clientes':
+            main_filters['tfecha__gte'] = from_date
+            main_filters['tfecha__lte'] = to_date
+        else:
+            main_filters['tfecha__gte'] = from_date
+            main_filters['tfecha__lte'] = to_date
+            # pass
+            # main_filters['chistoria__tfecha__gte'] = from_date
+            # main_filters['chistoria__tfecha__lte'] = to_date
+
+        arg_filters = []
+        for f in main_filters:
+            arg_filters.append(Q(**{f: main_filters[f]}))
+
+        # print('arg_filters', arg_filters)
+        # import pdb
+        # pdb.set_trace()
+
+
+        result = Model.objects.filter(*arg_filters)
 
         response = HttpResponse(content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = 'attachment; filename=robin.xlsx'
@@ -53,15 +73,23 @@ def all_clientes(request):
         workbook  = writer.book
         worksheet = writer.sheets['Sheet1']
 
-        report = getattr(define_reports, request.POST.get('report'))
+        report_rows = report['rows']
 
-        for row, header_name in report['headers']:
-            worksheet.write(row, header_name)
+        # Write Headers
+        indx = 0
+        for header_name, _ in report_rows:
+            worksheet.write(CSV_SERIE[indx] + '1', header_name)
+            indx += 1
 
+        # Write rows
         i = 2
-        for cliente in clientes:
-            for letter, attr in report['attributes']:
-                worksheet.write('{}{}'.format(letter, i), getattr(cliente, attr))
+        print('FOUNDED:', len(result))
+        for _obj in result:
+            csv_i = 0
+            for header_name, attr in report_rows:
+                # worksheet.write(CSV_SERIE[csv_i] + str(i), getattr(cliente, attr))
+                worksheet.write(CSV_SERIE[csv_i] + str(i), get_attribute(_obj, attr))
+                csv_i += 1
             i += 1
 
         # Close the Pandas Excel writer and output the Excel file.
