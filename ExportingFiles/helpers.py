@@ -1,5 +1,9 @@
 import re
 from . import models
+from django.db.models import Q
+from django.db.models.functions import Concat
+from django.db.models import CharField
+import operator
 
 
 JOIN_PATTERN = re.compile(r'^(join\((.*)\)\.)')
@@ -13,11 +17,6 @@ def generate_csv_serie():
 
 def is_related_join(attr_string):
     return JOIN_PATTERN.match(attr_string)
-    # for h, attr in report_1['rows']:
-    # if match:
-    #     print('matched', attr)
-    #     print('match.group(1)', match.group(1))
-    #     print('match.group(2)', match.group(2), match.group(2).split(','))
 
 
 def get_related_instance(instance, match, attr_string):
@@ -28,8 +27,6 @@ def get_related_instance(instance, match, attr_string):
         attr_str: get_attribute(instance, self_attr),
         'tfecha__isnull': False
     }
-    # import pdb
-    # pdb.set_trace()
 
     Model = getattr(models, model_str)
     try:
@@ -54,8 +51,6 @@ def get_attribute(instance, attr_string):
 
     match = is_related_join(attr_string)
     if match:
-        # import pdb
-        # pdb.set_trace()
         instance = get_related_instance(instance, match, attr_string)
         if not instance:
             return ''
@@ -69,6 +64,30 @@ def get_attribute(instance, attr_string):
 
         value = getattr(value, a)
     return str(value)
+
+
+def get_q_filter_list(dict_filter):
+    return [Q(**{df: dict_filter[df]}) for df in dict_filter]
+
+
+def get_all_related_records(model, date_filter):
+    _filter = get_q_filter_list(date_filter)
+    return model.objects.annotate(chistoria_and_tfecha=Concat('chistoria', 'tfecha', output_field=CharField())).filter(*_filter)
+
+
+def get_concatenated_rows(result):
+    return [r.chistoria + str(r.tfecha)[:-9] for r in result]
+
+
+def get_reduced_q_objects(date_filter, business):
+    CD = models.ClientesDet
+    date_filter['cempresa'] = business
+    main_filters = get_q_filter_list(date_filter)
+    result = CD.objects.filter(*main_filters)
+    if result:
+        rows = get_concatenated_rows(result)  # ['142729696002012-02-29']
+        query = reduce(operator.or_, (Q(chistoria_and_tfecha__icontains=row) for row in rows))
+        return query
 
 
 ALPHABET = ''.join([chr(x) for x in range(65, 91)])

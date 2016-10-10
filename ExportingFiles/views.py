@@ -9,10 +9,14 @@ from .models import Town, Weather, Clientes, Triaje
 from .excel_utils import *
 from .pdf_utils import PdfPrint
 import datetime
-from django.db.models import Q
 import pandas as pd
 from . import define_reports
-from helpers import CSV_SERIE, get_attribute
+from helpers import (
+    CSV_SERIE,
+    get_attribute,
+    get_all_related_records,
+    get_reduced_q_objects
+)
 from . import models
 
 
@@ -28,37 +32,28 @@ def all_clientes(request):
     if 'excel' in request.POST:
         from_date = datetime.datetime.strptime(request.POST.get('from_date'), "%Y-%m-%d")
         to_date = datetime.datetime.strptime(request.POST.get('to_date'), "%Y-%m-%d") + datetime.timedelta(hours=23, minutes=59)
+        business = request.POST.get('business', '')
 
         report = getattr(define_reports, request.POST.get('report'))
         Model = getattr(models, report['model'])
-        main_filters = {}
-        if report['model'] == 'Clientes':
-            main_filters['tfecha__gte'] = from_date
-            main_filters['tfecha__lte'] = to_date
-        else:
-            main_filters['tfecha__gte'] = from_date
-            main_filters['tfecha__lte'] = to_date
-            # pass
-            # main_filters['chistoria__tfecha__gte'] = from_date
-            # main_filters['chistoria__tfecha__lte'] = to_date
 
-        arg_filters = []
-        for f in main_filters:
-            arg_filters.append(Q(**{f: main_filters[f]}))
+        date_filter = {
+            'tfecha__gte': from_date,
+            'tfecha__lte': to_date,
+        }
 
-        # print('arg_filters', arg_filters)
-        # import pdb
-        # pdb.set_trace()
-
-
-        result = Model.objects.filter(*arg_filters)
+        result = None
+        queryset = get_all_related_records(Model, date_filter)
+        if queryset:
+            q_objects = get_reduced_q_objects(date_filter, business)
+            if q_objects:
+                result = queryset.filter(q_objects)
 
         response = HttpResponse(content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = 'attachment; filename=robin.xlsx'
         # xlsx_data = WriteToExcel(weather_period, town)
 
         # Create a Pandas dataframe from the data.
-        # for c in clientes:
 
         df = pd.DataFrame({})
 
@@ -82,15 +77,14 @@ def all_clientes(request):
             indx += 1
 
         # Write rows
-        i = 2
-        print('FOUNDED:', len(result))
-        for _obj in result:
-            csv_i = 0
-            for header_name, attr in report_rows:
-                # worksheet.write(CSV_SERIE[csv_i] + str(i), getattr(cliente, attr))
-                worksheet.write(CSV_SERIE[csv_i] + str(i), get_attribute(_obj, attr))
-                csv_i += 1
-            i += 1
+        if result:
+            i = 2
+            for _obj in result:
+                csv_i = 0
+                for header_name, attr in report_rows:
+                    worksheet.write(CSV_SERIE[csv_i] + str(i), get_attribute(_obj, attr))
+                    csv_i += 1
+                i += 1
 
         # Close the Pandas Excel writer and output the Excel file.
         writer.save()
