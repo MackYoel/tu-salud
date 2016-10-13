@@ -1547,7 +1547,8 @@ class Entregacargo(models.Model):
 
 
 class Espirometria(models.Model):
-    chistoria = models.ForeignKey(Clientes, db_column='chistoria', blank=True, null=True)
+    #chistoria = models.ForeignKey(Clientes, db_column='chistoria', blank=True, null=True)
+    chistoria = models.CharField(max_length=11, blank=True, null=True)
     tfecha = models.DateTimeField(blank=True, null=True)
     thora = models.TimeField(blank=True, null=True)
     nsecuencia = models.IntegerField(blank=True, null=True)

@@ -1,7 +1,6 @@
 Django==1.8.2
 ipdb==0.8.1
 ipython==3.2.0
-MySQL-python==1.2.5
 numpy==1.11.2
 pandas==0.19.0
 Pillow==2.8.2
