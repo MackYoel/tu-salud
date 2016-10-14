@@ -3,29 +3,50 @@ report_1 = {
     'rows': [
         ('AUDIO id',                            'id'),
         ('AUDIO historia',                      'chistoria'),
-        ('AUDIO fecha',                         'tfecha'),
-        ('CLINICO tabaco',                      'join(chistoria,Clinico.chistoria).chabitostabaco'),
-        ('CLINICO tfecha',                      'join(chistoria,Clinico.chistoria).tfecha'),
-    ]
-}
-report_2 = {
-    'model': 'Espirometria',
-    'rows': [
-        ('espi id',                            'id'),
-        ('espi historia',                      'chistoria'),
-        ('espi fecha',                         'tfecha'),
-        ('CLINICO tabaco',                      'join(chistoria,Clinico.chistoria).chabitostabaco'),
-        ('CLINICO tfecha',                      'join(chistoria,Clinico.chistoria).tfecha'),
-    ]
-}
-report_3 = {
-    'model': 'Espirometria',
-    'rows': [
-        ('espi id',                            'id'),
-        ('espi historia',                      'chistoria'),
-        ('espi fecha',                         'tfecha'),
+        ('AUDIO fecha',                         ''),
         ('CLINICO tabaco',                      'join(chistoria,Clinico.chistoria).chabitostabaco'),
         ('CLINICO tfecha',                      'join(chistoria,Clinico.chistoria).tfecha'),
     ]
 }
 
+report_2 = {
+    'model': 'Clientes',
+    'rows': [
+  ('Tipo de Documento','ctipdoc'),
+ ('Numero de Documento','cdni'),
+ ('Apellido Paterno','capellidos'),
+ ('Apellido Materno','capellidos'),
+ ('Nombres','cnombre'),
+ ('Sexo','csexo'),
+ ('Estado Civil','cestciv'),
+ ('Fecha de Nacimiento','dfecnac'),
+ ('Grado de Instruccion','cgrado'),
+ ('Profesion','cprofesion'),
+ ('Tipo de Telefono','2'),
+ ('Numero de Telefono','ccelular'),
+ ('N de Hijos Vivos','clinico;"cnumerohijosvivos"'),
+ ('N de Hijos Muertos','clinico;"cnumerohijosmuertos"'),
+ ('N Derecho Habientes',''),
+ ('Correo Electronico','ccorreo'),
+ ('Numero de Historia','chistoria'),
+ ('Lugar de Nacimiento','clugar'),
+ ('Domicilio (Ubigeo)','cubigeo'),
+ ('Direccion','cdomicilio'),
+ ('Referencia',''),
+ ('Nombre',''),
+ ('Parentesco',''),
+ ('Telefono',''),
+ ('Fecha de Cita','tfecha'),
+ ('Tipo de Atencion','texamen'),
+ ('Perfil Medico','cperfiles'),
+ ('Observaciones',''),
+ ('Ocupacion','cpuesto'),
+ ('Fecha de Vencimiento','join(chistoria,ocupacional.chistoria).tfechaca'),
+ ('Fecha de Caducidad',''),
+ ('Aptitud','join(chistoria,Ocupacional.chistoria).ccomentario'), 
+ ('Area / Gerencia',''),
+ ('Centro de Costos',''),
+ ('Contratista','cempresa'),
+ ('Sub- Contratista','ccontrata'),
+   ]
+}

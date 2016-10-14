@@ -2122,7 +2122,7 @@ class Medicos(models.Model):
 
 
 class Ocupacional(models.Model):
-    chistoria = models.ForeignKey(Clientes, db_column='chistoria', blank=True, null=True)
+    chistoria = models.CharField(max_length=11, blank=True, null=True)
     tfecha = models.DateTimeField(blank=True, null=True)
     nsecuencia = models.IntegerField(blank=True, null=True)
     cusuario = models.CharField(max_length=5, blank=True, null=True)
