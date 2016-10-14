@@ -3,6 +3,7 @@ from . import models
 from django.db.models import Q
 from django.db.models.functions import Concat
 from django.db.models import CharField
+import datetime
 import operator
 
 
@@ -63,7 +64,9 @@ def get_attribute(instance, attr_string):
             return ''
 
         value = getattr(value, a)
-    return str(value)
+    if isinstance(value, datetime.datetime):
+        return str(value)
+    return value
 
 
 def get_q_filter_list(dict_filter):

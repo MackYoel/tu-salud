@@ -41,7 +41,7 @@ report_2 = {
  ('Perfil Medico','cperfiles'),
  ('Observaciones',''),
  ('Ocupacion','cpuesto'),
- ('Fecha de Vencimiento','join(chistoria,ocupacional.chistoria).tfechaca'),
+ ('Fecha de Vencimiento','join(chistoria,Ocupacional.chistoria).tfechaca'),
  ('Fecha de Caducidad',''),
  ('Aptitud','join(chistoria,Ocupacional.chistoria).ccomentario'), 
  ('Area / Gerencia',''),
